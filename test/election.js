@@ -28,4 +28,41 @@ contract("Election", function (accounts) {
     const { voteCount } = candidate
     assert.equal(voteCount, 1, "increments the candidate's vote count")
   })
+
+  it("throws an exception for invalid candidates", async () => {
+    const instance = await Election.new()
+    try {
+      await instance.vote(99, { from: accounts[1] })
+    } catch (e) {}
+
+    const candidate1 = await instance.candidates(1)
+    assert.equal(
+      candidate1.voteCount,
+      0,
+      "candidate 1 did not receive any votes"
+    )
+
+    const candidate2 = await instance.candidates(2)
+    assert.equal(
+      candidate2.voteCount,
+      0,
+      "candidate 2 did not receive any votes"
+    )
+  })
+
+  it("throws an exception for double voting", async () => {
+    const instance = await Election.new()
+    const candidateId = 2
+    await instance.vote(candidateId, { from: accounts[1] })
+
+    let candidate = await instance.candidates(candidateId)
+    assert.equal(candidate.voteCount, 1, "accepts first vote")
+
+    try {
+      await instance.vote(candidateId, { from: accounts[1] })
+    } catch (e) {}
+
+    candidate = await instance.candidates(candidateId)
+    assert.equal(candidate.voteCount, 1, "did not receive any votes more")
+  })
 })
