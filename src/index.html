@@ -30,6 +30,20 @@
               </thead>
               <tbody id="candidatesResults"></tbody>
             </table>
+            <div>
+              <div class="form-group">
+                <label for="candidatesSelect">Select Candidate</label>
+                <select class="form-control" id="candidatesSelect"></select>
+              </div>
+              <button
+                id="btn-vote"
+                class="btn btn-primary"
+                onclick="castVote();"
+              >
+                Vote
+              </button>
+              <hr />
+            </div>
 
             <hr />
             <p id="accountAddress" class="text-center"></p>
